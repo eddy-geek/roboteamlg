@@ -32,8 +32,7 @@ public class ElephantInCorridorsSniper extends AdvancedRobot {
         double relativeEnemyAngle = e.getBearing();
         System.out.println("Gun angle is:"+gunAngle);
         System.out.println("bearing is: "+relativeEnemyAngle);
-          
-        
+       
         turnGunRight(relativeEnemyAngle - gunAngle);
         fire(1);
     }

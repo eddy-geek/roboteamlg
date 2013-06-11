@@ -4,3 +4,8 @@
 *.jar
 *.war
 *.ear
+/nbproject/private/
+/build/
+/realBots/nbproject/private/
+/realBots/build/
+/realBots/dist/
