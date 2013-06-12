@@ -1,4 +1,4 @@
-package xander.cat;
+package teamlg.bot;
 
 import java.awt.Color;
 import java.awt.geom.Path2D;
@@ -7,6 +7,10 @@ import java.util.Map;
 import java.util.Set;
 
 import robocode.WinEvent;
+import teamlg.drive.antiGrav.AntiGravityDrive;
+import teamlg.radar.SpinningRadar;
+import xander.cat.group.idealPosition.IdealPositionDrive;
+import xander.cat.group.mirror.AntiMirrorDrive;
 
 import xander.cat.group.mirror.MirrorFactory;
 import xander.cat.group.ram.RamFactory;
@@ -24,11 +28,11 @@ import xander.core.Configuration;
 import xander.core.Resources;
 import xander.core.RobotStyle;
 import xander.core.Scenario;
-import xander.core.drive.Drive;
 import xander.core.drive.DriveBoundsFactory;
 import xander.core.gun.XanderGun;
 import xander.core.gun.power.PowerSelector;
 import xander.core.gun.targeter.CircularTargeter;
+import xander.core.gun.targeter.LinearTargeter;
 import xander.core.io.BattleStats;
 import xander.core.math.RCMath;
 import xander.core.track.DriveStats;
@@ -40,7 +44,7 @@ import xander.core.track.GunStats;
  * 
  * @author Scott Arnold
  */
-public class XanderCat extends AbstractXanderRobot {
+public class Furby extends AbstractXanderRobot {
 
 	private static CircularDriveScenario circularDriverScenario;
 	private static SteppedHitRatioPowerSelector steppedPowerSelector;
@@ -51,7 +55,7 @@ public class XanderCat extends AbstractXanderRobot {
 	
 	@Override
 	protected void style(RobotStyle robotStyle) {
-		robotStyle.setColors(Color.RED, Color.BLACK, Color.RED);  // radar color changed to red at Alexander's request :)
+		robotStyle.setColors(Color.PINK, Color.BLACK, Color.PINK);  // radar color changed to red at Alexander's request :)
 		robotStyle.setBulletColor(Color.PINK);
 		robotStyle.setScanArcColor(Color.GREEN);
 	}
@@ -129,6 +133,7 @@ public class XanderCat extends AbstractXanderRobot {
 		}
 		return true;
 	}
+        
 
 	@Override
 	protected void addComponents(ComponentChain chain) {
@@ -141,12 +146,9 @@ public class XanderCat extends AbstractXanderRobot {
 //		XanderPaintManager.getInstance(this).enable(getBattleFieldHeight(), new BulletShieldingPainter());
 		
 		// RADAR
-		
-		chain.addDefaultComponents(new BasicRadar(45, 5));
-		
 		// DRIVES
 		
-		RamFactory.addRamComponents(chain, 2d, 0.1d, 30);
+		/*RamFactory.addRamComponents(chain, 2d, 0.1d, 30);
 		
 		RamFactory.addAntiRamComponents(chain);
 		
@@ -163,10 +165,18 @@ public class XanderCat extends AbstractXanderRobot {
 		// a special scenario just for our circular drivers out there!
 		XanderGun circularGun = new XanderGun(new CircularTargeter(), mainPowerSelector);
 		circularDriverScenario = new CircularDriveScenario(circularGun);
-		chain.addComponents(circularDriverScenario, circularGun);
+		chain.addComponents(circularDriverScenario, circularGun);*/
 		
-		// main guess factor gun
 		
+		// default components will be 
+                // A Anti Gravity Drive
+                // - a linear gun
+                
+                SpinningRadar aDefaultRadar = new SpinningRadar(2*Math.PI);
+                XanderGun aDefaultGun = new XanderGun(new LinearTargeter(), mainPowerSelector);
+                AntiGravityDrive aDefaultDrive = new AntiGravityDrive();
+                
+                chain.addDefaultComponents( aDefaultRadar,aDefaultGun, aDefaultDrive);
 	}
 
 	@Override
