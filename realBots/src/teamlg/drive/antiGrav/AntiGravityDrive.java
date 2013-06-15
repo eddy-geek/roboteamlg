@@ -75,12 +75,6 @@ public class AntiGravityDrive implements Drive {
             }
         }
         
-        System.out.println("Number of robots: "+robot.getOthers());
-        System.out.println("Number of robots found: "+Resources.getOtherRobots().getRobotList().size());
-
-        for (GravityPoint p : aGravMap.values())
-            System.out.println("Gravity: "+p.x+";"+p.y+" -- "+p.power);
-        
         if (robot.getOthers() == 0 || aRobotList.isEmpty()) {
             driveController.drive(0, 0);
         } else {
@@ -114,7 +108,6 @@ public class AntiGravityDrive implements Drive {
         myY = robot.getY();
         targetX = robot.getX();
         targetY = robot.getY();
-        System.out.println ("Current position: "+myX+";"+myY);
     }
 
     /**
@@ -162,14 +155,12 @@ public class AntiGravityDrive implements Drive {
     
     private void ComputeRobotThreat(GravityPoint p) {
         double d2 = Math.pow(p.x - myX, 2) + Math.pow(p.y - myY, 2);
-        System.out.println("Distance to robot "+Math.sqrt(d2));
         targetX += REPULSE_FACTOR * p.power * (1 / Math.pow(d2, 1.5)) * (p.x - myX);
         targetY += REPULSE_FACTOR * p.power * (1 / Math.pow(d2, 1.5)) * (p.y - myY);
 
     }
 
     private double computeTurnAngle() {
-        System.out.println ("Move from: ["+myX+";"+myY+"] to ["+targetX+";"+targetY+"]");
         double aRadius = Math.sqrt( Math.pow(myX-targetX, 2) + Math.pow(myY-targetY, 2) );
 
 
@@ -184,7 +175,6 @@ public class AntiGravityDrive implements Drive {
             angleToTurn *= -1;
         }
 
-        System.out.println("Robot should turn by "+ Math.toDegrees(angleToTurn)+" degrees");
         return Math.toDegrees(angleToTurn);
     }
 

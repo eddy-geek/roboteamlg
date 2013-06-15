@@ -7,6 +7,8 @@ import java.util.HashSet;
  * @author FHEMERY
  */
 public class RobotList {
+    
+    
     private HashSet<String> robotNames;
     
     public RobotList ()
@@ -17,6 +19,10 @@ public class RobotList {
     public void addRobot(String robot)
     {
         robotNames.add(robot);
+    }
+    
+    public void removeRobot(String robot){
+        robotNames.remove(robot);
     }
     
     public void clearRobotList()
