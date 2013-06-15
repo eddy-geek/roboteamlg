@@ -174,7 +174,7 @@ public class Furby extends AbstractXanderRobot {
                 
                 SpinningRadar aDefaultRadar = new SpinningRadar(2*Math.PI);
                 XanderGun aDefaultGun = new XanderGun(new LinearTargeter(), mainPowerSelector);
-                AntiGravityDrive aDefaultDrive = new AntiGravityDrive();
+                AntiGravityDrive aDefaultDrive = new AntiGravityDrive( getBattleFieldWidth(), getBattleFieldHeight() );
                 
                 chain.addDefaultComponents( aDefaultRadar,aDefaultGun, aDefaultDrive);
 	}

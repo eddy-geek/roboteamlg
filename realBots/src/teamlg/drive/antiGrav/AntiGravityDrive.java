@@ -25,15 +25,30 @@ import xander.core.track.SnapshotHistory;
  */
 public class AntiGravityDrive implements Drive {
 
+    private static final int REPULSE_FACTOR = 100000;
+    
     private RobotProxy robot;
     private HashMap<String, GravityPoint> aGravMap;
     private ArrayList<String> robotNames;
+    private double mapXLength, mapYLength;
+    
+    private double targetX, targetY;
+    private double myX;
+    private double myY;
+    
+    private double repulseX =-1;
+    private double repulseY =-1;
+    private int turnToRenewRepulse;
+    private static int NB_OF_TURNS_PER_REPULSE = 8;
+    
 
-    public AntiGravityDrive() {
+    public AntiGravityDrive(double mapXlength, double mapYLength) {
         //Initialize robot proxy and gravmap
         robot = Resources.getRobotProxy();
         aGravMap = new HashMap<>();
         this.robotNames = new ArrayList<>();
+        this.mapXLength = mapXlength;
+        this.mapYLength = mapYLength;
     }
 
     @Override
@@ -79,40 +94,19 @@ public class AntiGravityDrive implements Drive {
         if (robot.getOthers() == 0 || robotNames.isEmpty()) {
             driveController.drive(0, 0);
         } else {
-            double myX = robot.getX(), myY = robot.getY();
-            double targetX = robot.getX();
-            double targetY = robot.getY();
-
-            System.out.println ("Current position: "+myX+";"+myY);
-            
+            InitializePositions();
+           
             // Add all the gravity force from other robots
             for (GravityPoint p : aGravMap.values()) {
-                
-                double d2 = Math.pow(p.x - myX, 2) + Math.pow(p.y - myY, 2);
-                System.out.println("Distance to robot "+Math.sqrt(d2));
-                targetX += 1000000 * p.power * (1 / Math.pow(d2, 1.5)) * (p.x - myX);
-                targetY += 1000000 * p.power * (1 / Math.pow(d2, 1.5)) * (p.y - myY);
- 
+                ComputeRobotThreat(p);
             }
 
-            System.out.println ("Move from: ["+myX+";"+myY+"] to ["+targetX+";"+targetY+"]");
-            double aRadius = Math.sqrt( Math.pow(myX-targetX, 2) + Math.pow(myY-targetY, 2) );
-            
-            
-            double diffX = targetX-myX, diffY=targetY-myY;
-            double angleToTurn = Math.acos( Math.abs(diffY)/ Math.sqrt( Math.pow(diffX, 2) + Math.pow(diffY,2)));
-            if (diffY < 0)
-            {
-                angleToTurn = Math.PI - angleToTurn;
-            }
-            if (diffX < 0)
-            {
-                angleToTurn *= -1;
-            }
-            
-            System.out.println("Robot should turn by "+ Math.toDegrees(angleToTurn)+" degrees");
-            
-            driveController.drive(Math.toDegrees(angleToTurn), RCPhysics.MAX_SPEED);
+            // Add the gravity from the walls.
+            computeWallThreat();
+
+            handleOwnRepulse();
+            // Finished computing the danger, start computing the Move
+            driveController.drive(computeTurnAngle(), RCPhysics.MAX_SPEED);
             
         }
     }
@@ -121,4 +115,88 @@ public class AntiGravityDrive implements Drive {
     public void driveTo(Snapshot opponentSnapshot, DriveController driveController) {
         drive(driveController);
     }
+
+    /**
+     * Retrieves the positions and the target position from the proxy.
+     */
+    private void InitializePositions() {
+        myX = robot.getX();
+        myY = robot.getY();
+        targetX = robot.getX();
+        targetY = robot.getY();
+        System.out.println ("Current position: "+myX+";"+myY);
+    }
+
+    /**
+     * Computes the wall threat. Modifies the targetX and Y in consequence.
+     * 
+     * Force driving the robot out of the wall is a 1/d^3 one, d being the distance
+     * between the robot of the wall.
+     */
+    private void computeWallThreat() {
+        // compute wall threat. 
+        targetX += REPULSE_FACTOR/6* 1 / Math.pow(myX, 2);
+        targetX -= REPULSE_FACTOR/6 * 1 / Math.pow(mapXLength - myX, 2);
+        targetY += REPULSE_FACTOR/6 * 1 / Math.pow(myY, 2);
+        targetY -= REPULSE_FACTOR/6 * 1 / Math.pow(mapYLength - myY, 2);
+
+    }
+
+    private void handleOwnRepulse() {
+        // First init. Just record the positions, the other robots are going to do the job.
+        if (robot.getTime() < 10)
+            return;
+        
+        if (turnToRenewRepulse == 0)
+        {
+            repulseX = myX;
+            repulseY = myY;
+            turnToRenewRepulse--;
+        }
+        else if (turnToRenewRepulse > 0)
+            --turnToRenewRepulse;
+        
+        if (robot.getVelocity() ==0 && turnToRenewRepulse < 0)
+        {
+            turnToRenewRepulse = NB_OF_TURNS_PER_REPULSE;
+        }
+        
+        // Compute target X and Y
+        double d2 = Math.pow(repulseX - myX, 2) + Math.pow(repulseY - myY,2);        
+        if (d2 < 0.1)
+            return;
+        targetX += -1* REPULSE_FACTOR * (1/Math.pow(d2, 2))*(repulseX - myX);
+        targetY += -1* REPULSE_FACTOR * (1/Math.pow(d2, 2))*(repulseY - myY);
+        
+    }
+    
+    private void ComputeRobotThreat(GravityPoint p) {
+        double d2 = Math.pow(p.x - myX, 2) + Math.pow(p.y - myY, 2);
+        System.out.println("Distance to robot "+Math.sqrt(d2));
+        targetX += REPULSE_FACTOR * p.power * (1 / Math.pow(d2, 1.5)) * (p.x - myX);
+        targetY += REPULSE_FACTOR * p.power * (1 / Math.pow(d2, 1.5)) * (p.y - myY);
+
+    }
+
+    private double computeTurnAngle() {
+        System.out.println ("Move from: ["+myX+";"+myY+"] to ["+targetX+";"+targetY+"]");
+        double aRadius = Math.sqrt( Math.pow(myX-targetX, 2) + Math.pow(myY-targetY, 2) );
+
+
+        double diffX = targetX-myX, diffY=targetY-myY;
+        double angleToTurn = Math.acos( Math.abs(diffY)/ Math.sqrt( Math.pow(diffX, 2) + Math.pow(diffY,2)));
+        if (diffY < 0)
+        {
+            angleToTurn = Math.PI - angleToTurn;
+        }
+        if (diffX < 0)
+        {
+            angleToTurn *= -1;
+        }
+
+        System.out.println("Robot should turn by "+ Math.toDegrees(angleToTurn)+" degrees");
+        return Math.toDegrees(angleToTurn);
+    }
+
+    
 }
