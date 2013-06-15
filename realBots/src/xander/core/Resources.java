@@ -1,11 +1,13 @@
 package xander.core;
 
+import teamlg.bot.RobotList;
 import xander.core.drive.DriveController;
 import xander.core.gun.GunController;
 import xander.core.radar.RadarController;
 import xander.core.track.DriveStats;
 import xander.core.track.GunStats;
 import xander.core.track.OpponentGunWatcher;
+import xander.core.track.Snapshot;
 import xander.core.track.SnapshotHistory;
 import xander.core.track.WaveHistory;
 
@@ -51,6 +53,7 @@ public class Resources {
 	private static Configuration configuration = new Configuration();
 	private static RobotStyle robotStyle = new RobotStyle();
 	private static long winOrDeathTime;
+        private static RobotList robotList;
 	
 	static void initialize(AbstractXanderRobot robot, ComponentChain chain) {
 		robotProxy.setRobot(robot);
@@ -61,6 +64,7 @@ public class Resources {
 				robotEvents, robotProxy, snapshotHistory, configuration);
 		gunStats = new GunStats(robotProxy, waveHistory, robotEvents, configuration);
 		driveStats = new DriveStats(robotProxy, robotEvents, configuration, chain);
+                robotList = new RobotList();
 	}
 	
 	static void beginRound(AbstractXanderRobot robot) {
@@ -148,5 +152,19 @@ public class Resources {
 	static RobotStyle getRobotStyle() {
 		return robotStyle;
 	}
+        
+        public static RobotList getOtherRobots() {
+            // Generate list of robots if necessary
+            if (robotProxy.getOthers()!= robotList.getRobotList().size())
+            {
+                robotList.clearRobotList();
+                String myName = robotProxy.getName();
+                for ( Snapshot aRobotSnap : snapshotHistory.getLastOpponentsScanned())
+                    if (! aRobotSnap.getName().equals(myName))
+                        robotList.addRobot(aRobotSnap.getName());
+            }
+            
+            return robotList;
+        }
 	
 }

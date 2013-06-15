@@ -2,6 +2,7 @@ package teamlg.drive.antiGrav;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import xander.core.Resources;
 
 import xander.core.RobotProxy;
@@ -14,7 +15,7 @@ import xander.core.track.SnapshotHistory;
 /**
  * This drive is used to move around the different targets, avoiding the walls.
  *
- * The anti-gravity patterns look at all the enemies and set up the danger they
+ * The anti-gravity patterns looks at all the enemies and set up the danger they
  * represent.
  * 
  *  TODO: Take walls into account
@@ -29,7 +30,6 @@ public class AntiGravityDrive implements Drive {
     
     private RobotProxy robot;
     private HashMap<String, GravityPoint> aGravMap;
-    private ArrayList<String> robotNames;
     private double mapXLength, mapYLength;
     
     private double targetX, targetY;
@@ -39,14 +39,13 @@ public class AntiGravityDrive implements Drive {
     private double repulseX =-1;
     private double repulseY =-1;
     private int turnToRenewRepulse;
-    private static int NB_OF_TURNS_PER_REPULSE = 8;
+    private static int NB_OF_TURNS_PER_REPULSE = 5;
     
 
     public AntiGravityDrive(double mapXlength, double mapYLength) {
         //Initialize robot proxy and gravmap
         robot = Resources.getRobotProxy();
         aGravMap = new HashMap<>();
-        this.robotNames = new ArrayList<>();
         this.mapXLength = mapXlength;
         this.mapYLength = mapYLength;
     }
@@ -66,17 +65,8 @@ public class AntiGravityDrive implements Drive {
         // Update the data concerning the robots
         SnapshotHistory aHistory = Resources.getSnapshotHistory();
         
-        // List the robots
-        if (robotNames.size() != robot.getOthers())
-        {
-            robotNames.clear();
-            
-            for ( Snapshot aRobotSnap : aHistory.getLastOpponentsScanned())
-                if (! aRobotSnap.getName().equals(robot.getName()))
-                    robotNames.add(aRobotSnap.getName());
-        }
-        
-        for (String aRobot : robotNames) {
+        HashSet<String> aRobotList = Resources.getOtherRobots().getRobotList(); 
+        for (String aRobot : aRobotList ) {
             Snapshot aSnapshot = aHistory.getSnapshot(aRobot);
             if (aSnapshot != null) {
                 // Todo : determine Robot dangerousness.
@@ -86,12 +76,12 @@ public class AntiGravityDrive implements Drive {
         }
         
         System.out.println("Number of robots: "+robot.getOthers());
-        System.out.println("Number of robots found: "+robotNames.size());
+        System.out.println("Number of robots found: "+Resources.getOtherRobots().getRobotList().size());
 
         for (GravityPoint p : aGravMap.values())
             System.out.println("Gravity: "+p.x+";"+p.y+" -- "+p.power);
         
-        if (robot.getOthers() == 0 || robotNames.isEmpty()) {
+        if (robot.getOthers() == 0 || aRobotList.isEmpty()) {
             driveController.drive(0, 0);
         } else {
             InitializePositions();
