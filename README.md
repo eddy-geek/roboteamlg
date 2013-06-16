@@ -20,3 +20,15 @@ roboteamlg
   - Robovamp awake
   - Robovamp killed
   - 1-vs-1
+
+* Drive tweaks
+  - Allow to be slightly nearer the robovamps if not their target
+  - Allow to be nearer our target
+
+* Gun tweaks
+  - Store current target
+  - Smart target change based on:
+    . Type (robovamp / robovamp target / other)
+    . Snapshot age
+    . target angular distance to gun
+
