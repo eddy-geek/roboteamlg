@@ -7,7 +7,6 @@ import xander.core.radar.RadarController;
 import xander.core.track.DriveStats;
 import xander.core.track.GunStats;
 import xander.core.track.OpponentGunWatcher;
-import xander.core.track.Snapshot;
 import xander.core.track.SnapshotHistory;
 import xander.core.track.WaveHistory;
 
@@ -153,17 +152,7 @@ public class Resources {
 		return robotStyle;
 	}
         
-        public static RobotList getOtherRobots() {
-            // Generate list of robots if necessary
-            if (robotProxy.getOthers()!= robotList.getRobotList().size())
-            {
-                robotList.clearRobotList();
-                String myName = robotProxy.getName();
-                for ( Snapshot aRobotSnap : snapshotHistory.getLastOpponentsScanned())
-                    if (! aRobotSnap.getName().equals(myName))
-                        robotList.addRobot(aRobotSnap.getName());
-            }
-            
+        public static RobotList getOtherRobots() { 
             return robotList;
         }
 	

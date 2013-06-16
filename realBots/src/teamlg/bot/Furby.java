@@ -5,6 +5,8 @@ import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Map;
 import java.util.Set;
+import robocode.RobotDeathEvent;
+import robocode.ScannedRobotEvent;
 
 import robocode.WinEvent;
 import teamlg.drive.antiGrav.AntiGravityDrive;
@@ -215,4 +217,21 @@ public class Furby extends AbstractXanderRobot {
 		wins[getRoundNum()] = true;
 		super.onWin(event);
 	}		
+
+    @Override
+    public void onScannedRobot(ScannedRobotEvent event) {
+        super.onScannedRobot(event); 
+        Resources.getOtherRobots().addRobot(event.getName());
+    }
+
+    @Override
+    public void onRobotDeath(RobotDeathEvent event) {
+        super.onRobotDeath(event); //To change body of generated methods, choose Tools | Templates.
+        Resources.getOtherRobots().removeRobot(event.getName());
+    }
+    
+    
+        
+        
+        
 }

@@ -9,7 +9,7 @@ import xander.core.track.Snapshot;
 import xander.core.track.SnapshotHistory;
 
 /**
- *
+ * TODO: implement a method to avoid scanning when there is nothing.
  * @author FHEMERY
  */
 public class SpinningRadar implements Radar{
@@ -32,9 +32,11 @@ public class SpinningRadar implements Radar{
             radarController.setTurnRadarLeftRadians(_sweepAngle);
             lastSnapshot = seekForTarget();
         }
+        else if (lastSnapshot != null)
+            lastSnapshot = Resources.getSnapshotHistory().getSnapshot(lastSnapshot.getName());
+
         
         return lastSnapshot;
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -43,9 +45,7 @@ public class SpinningRadar implements Radar{
     }
 
     @Override
-    public void onRoundBegin() {
-        // Do nothing.
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void onRoundBegin() {        
     }
 
     private Snapshot seekForTarget() {
