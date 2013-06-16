@@ -9,6 +9,8 @@ import java.util.Set;
 import robocode.WinEvent;
 import teamlg.drive.antiGrav.AntiGravityDrive;
 import teamlg.radar.SpinningRadar;
+import teamlg.scenario.DuelScenario;
+import teamlg.scenario.StrongerScenario;
 import xander.cat.group.idealPosition.IdealPositionDrive;
 import xander.cat.group.mirror.AntiMirrorDrive;
 
@@ -18,6 +20,7 @@ import xander.cat.group.rem.REMFactory;
 import xander.cat.group.shield.BulletShieldingAutoFireCondition;
 import xander.cat.group.shield.BulletShieldingController;
 import xander.cat.group.shield.BulletShieldingFactory;
+import xander.cat.gun.BSProtectedGun;
 import xander.cat.gun.power.SteppedHitRatioPowerSelector;
 import xander.cat.radar.BasicRadar;
 import xander.cat.scenario.CircularDriveScenario;
@@ -28,13 +31,16 @@ import xander.core.Configuration;
 import xander.core.Resources;
 import xander.core.RobotStyle;
 import xander.core.Scenario;
+import xander.core.drive.Drive;
 import xander.core.drive.DriveBoundsFactory;
+import xander.core.gun.Gun;
 import xander.core.gun.XanderGun;
 import xander.core.gun.power.PowerSelector;
 import xander.core.gun.targeter.CircularTargeter;
 import xander.core.gun.targeter.LinearTargeter;
 import xander.core.io.BattleStats;
 import xander.core.math.RCMath;
+import xander.core.radar.Radar;
 import xander.core.track.DriveStats;
 import xander.core.track.GunStats;
 
@@ -167,16 +173,41 @@ public class Furby extends AbstractXanderRobot {
 		circularDriverScenario = new CircularDriveScenario(circularGun);
 		chain.addComponents(circularDriverScenario, circularGun);*/
 		
+		//
+        // Compute scenarios
+		//
+		
+		// 1 vs 1
+        Scenario aDuelScenario = new DuelScenario();
+        Radar aDuelRadar = new BasicRadar(90, 45);
+        Gun aDuelGun = new XanderGun(new LinearTargeter(), mainPowerSelector);
+        Drive aDuelDrive = new IdealPositionDrive();
+        chain.addComponents(aDuelScenario, aDuelRadar, aDuelGun, aDuelDrive);
+        
+        // No robo vamps
+        // ...
+		
+        // Robo vamps and Stronger
+		Scenario aStrongerScenario = new StrongerScenario();
+        SpinningRadar aStrongerRadar = new SpinningRadar(2*Math.PI);
+        XanderGun aStrongerGun = new XanderGun(new LinearTargeter(), mainPowerSelector);
+        AntiGravityDrive aStrongerDrive = new AntiGravityDrive( getBattleFieldWidth(), getBattleFieldHeight() );
+        chain.addComponents(aStrongerScenario, aStrongerRadar, aStrongerGun, aStrongerDrive);
+        
+        // Robo vamps and not stronger
+        // ...
+        
 		
 		// default components will be 
-                // A Anti Gravity Drive
-                // - a linear gun
+        // A Anti Gravity Drive
+        // - a linear gun
+
+        SpinningRadar aDefaultRadar = new SpinningRadar(2*Math.PI);
+        XanderGun aDefaultGun = new XanderGun(new LinearTargeter(), mainPowerSelector);
+        AntiGravityDrive aDefaultDrive = new AntiGravityDrive( getBattleFieldWidth(), getBattleFieldHeight() );
+
+        chain.addDefaultComponents( aDefaultRadar,aDefaultGun, aDefaultDrive);
                 
-                SpinningRadar aDefaultRadar = new SpinningRadar(2*Math.PI);
-                XanderGun aDefaultGun = new XanderGun(new LinearTargeter(), mainPowerSelector);
-                AntiGravityDrive aDefaultDrive = new AntiGravityDrive( getBattleFieldWidth(), getBattleFieldHeight() );
-                
-                chain.addDefaultComponents( aDefaultRadar,aDefaultGun, aDefaultDrive);
 	}
 
 	@Override
