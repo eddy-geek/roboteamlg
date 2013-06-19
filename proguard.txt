@@ -1,0 +1,41 @@
+# From http://proguard.sourceforge.net/manual/examples.html#library
+
+-injars       <user.home>/robovampcode/roboteamlg/bin/artifacts/roboteamlg_jar/teamlg.bot.Furby_1.0.jar
+-outjars      <user.home>/teamlg.bot.Furby_1.0.jar
+-libraryjars  <java.home>/lib/rt.jar
+-libraryjars  /opt/robocode/libs/robocode.jar
+-printmapping out.map
+
+-dontobfuscate
+
+-keepparameternames
+-renamesourcefileattribute SourceFile
+-keepattributes Exceptions,InnerClasses,Signature,Deprecated,
+                SourceFile,LineNumberTable,*Annotation*,EnclosingMethod
+
+-keep public class teamlg.bot.Furby {
+    public protected *;
+}
+
+-keepclassmembernames class * {
+    java.lang.Class class$(java.lang.String);
+    java.lang.Class class$(java.lang.String, boolean);
+}
+
+-keepclasseswithmembernames class * {
+    native <methods>;
+}
+
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+
+-keepclassmembers class * implements java.io.Serializable {
+    static final long serialVersionUID;
+    private static final java.io.ObjectStreamField[] serialPersistentFields;
+    private void writeObject(java.io.ObjectOutputStream);
+    private void readObject(java.io.ObjectInputStream);
+    java.lang.Object writeReplace();
+    java.lang.Object readResolve();
+}
