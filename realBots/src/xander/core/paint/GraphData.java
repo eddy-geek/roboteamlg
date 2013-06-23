@@ -3,9 +3,7 @@ package xander.core.paint;
 import java.awt.Color;
 import java.util.List;
 
-import xander.paint.Paintable;
-
-public abstract class GraphData implements Paintable {
+public abstract class GraphData {
 
 	public static class HorizontalRule {
 		public HorizontalRule(double y, Color color, String description) {
@@ -28,11 +26,6 @@ public abstract class GraphData implements Paintable {
 		this.painterName = painterName;
 		this.dataPoints = new double[numDataPoints];
 		this.lastIndex = numDataPoints-1;
-	}
-	
-	@Override
-	public String getPainterName() {
-		return painterName;
 	}
 	
 	public abstract String getYAxisLabel();

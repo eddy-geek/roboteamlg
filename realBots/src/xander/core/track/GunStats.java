@@ -21,10 +21,8 @@ import xander.core.event.OpponentWaveListener;
 import xander.core.event.RoundListener;
 import xander.core.log.Log;
 import xander.core.log.Logger;
-import xander.paint.Paintable;
-import xander.paint.Paintables;
 
-public class GunStats implements MyWaveListener, MyVirtualWaveListener, OpponentWaveListener, RoundListener, Paintable {
+public class GunStats implements MyWaveListener, MyVirtualWaveListener, OpponentWaveListener, RoundListener {
 	
 	private static final Log log = Logger.getLog(GunStats.class);
 	
@@ -48,14 +46,8 @@ public class GunStats implements MyWaveListener, MyVirtualWaveListener, Opponent
 		waveHistory.addMyWaveListener(this);
 		waveHistory.addOpponentWaveListener(this);
 		robotEvents.addRoundListener(this);
-		Paintables.addPaintable(this);
 	}
 	
-	@Override
-	public String getPainterName() {
-		return null;  // no specific painter for instance of this class
-	}
-
 	/**
 	 * Returns a Set of all gun names.
 	 * 

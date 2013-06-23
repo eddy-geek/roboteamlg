@@ -17,8 +17,6 @@ import xander.core.math.RCPhysics;
 import xander.core.track.Snapshot;
 import xander.core.track.Wave;
 import xander.core.track.XBulletWave;
-import xander.paint.Paintable;
-import xander.paint.Paintables;
 
 /**
  * Controller class for bullet shielding against opponents.  This class is designed to accept requests from the
@@ -26,7 +24,7 @@ import xander.paint.Paintables;
  * 
  * @author Scott Arnold
  */
-public class BulletShieldingController implements RoundBeginListener, TurnListener, OpponentWaveListener, MyWaveListener, Paintable {
+public class BulletShieldingController implements RoundBeginListener, TurnListener, OpponentWaveListener, MyWaveListener {
 
 	private static final int REQUIRED_LEAD_TIME = 4;
 	
@@ -65,7 +63,6 @@ public class BulletShieldingController implements RoundBeginListener, TurnListen
 		Resources.getWaveHistory().addOpponentWaveListener(this);
 		Resources.getWaveHistory().addMyWaveListener(this);
 		this.bsDrive = bsDrive;
-		Paintables.addPaintable(this);
 	}
 	
 	public String getFireCheckString() {
@@ -330,8 +327,4 @@ public class BulletShieldingController implements RoundBeginListener, TurnListen
 		// no action required
 	}
 
-	@Override
-	public String getPainterName() {
-		return null;
-	}
 }

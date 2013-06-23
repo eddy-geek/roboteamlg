@@ -8,8 +8,6 @@ import xander.core.math.RCPhysics;
 import xander.core.track.Wave;
 import xander.core.math.BasicFactorArrays;
 import xander.core.math.RelativeAngleRange;
-import xander.paint.Paintable;
-import xander.paint.Paintables;
 
 /**
  * Tool class for predicting where robot can get to before a wave hits.  This tool
@@ -17,7 +15,7 @@ import xander.paint.Paintables;
  * 
  * @author Scott Arnold
  */
-public class DriveOptions implements Paintable {
+public class DriveOptions {
 	
 	public static final int IDX_DRIVE_HEADING = 0;
 	public static final int IDX_FACTOR_ANGLE = 1;
@@ -44,7 +42,6 @@ public class DriveOptions implements Paintable {
 	public DriveOptions(String painterName, int directionalTestAngles) {
 		this(directionalTestAngles);
 		this.painterName = painterName;
-		Paintables.addPaintable(this);
 	}
 	
 	public DriveOptions(int directionalTestAngles, Rectangle2D.Double battlefieldBounds, Path2D.Double driveBounds) {
@@ -55,12 +52,6 @@ public class DriveOptions implements Paintable {
 	public DriveOptions(String painterName, int directionalTestAngles, Rectangle2D.Double battlefieldBounds, Path2D.Double driveBounds) {
 		this(directionalTestAngles, battlefieldBounds, driveBounds);
 		this.painterName = painterName;
-		Paintables.addPaintable(this);
-	}
-	
-	@Override
-	public String getPainterName() {
-		return painterName;
 	}
 
 	public void computeDriveOptions(Wave wave, DriveState defenderDriveState, long fromTime, DirectDrivePredictor predictor) {

@@ -37,7 +37,6 @@ import xander.core.radar.RadarController;
 import xander.core.track.RunTimeLogger;
 import xander.core.track.Snapshot;
 import xander.core.track.SnapshotHistory;
-import xander.paint.Paintables;
 
 /**
  * Abstract robot class for robots built on the Xander 2 framework.
@@ -424,7 +423,6 @@ public abstract class AbstractXanderRobot extends AdvancedRobot {
 		if (configuration.getCpuConstantMS() != null) {
 			cpuUtilizationGraphData.setCPUConstant(configuration.getCpuConstantMS().doubleValue());
 		}
-		Paintables.addPaintable(cpuUtilizationGraphData);
 		log.info("Loading previous battle statistics...");
 		FileIO.loadBattleStats(configuration);
 		log.info("Ready for battle!");

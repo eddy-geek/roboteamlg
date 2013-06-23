@@ -36,15 +36,13 @@ import xander.core.log.Logger;
 import xander.core.math.RCMath;
 import xander.core.math.RCPhysics;
 import xander.core.math.RelativeAngleRange;
-import xander.paint.Paintable;
-import xander.paint.Paintables;
 
 /**
  * Maintains information on all bullet waves.
  * 
  * @author Scott Arnold
  */
-public class WaveHistory implements RoundBeginListener, GunListener, OpponentGunListener, TurnListener, BulletHitListener, Paintable {
+public class WaveHistory implements RoundBeginListener, GunListener, OpponentGunListener, TurnListener, BulletHitListener {
 
 	private static final Log log = Logger.getLog(WaveHistory.class);
 	
@@ -134,12 +132,6 @@ public class WaveHistory implements RoundBeginListener, GunListener, OpponentGun
 		robotEvents.addBulletHitListener(this);
 		this.maxWaveSaveDistance = robotProxy.getBattleFieldDiagonal();
 		this.battleFieldBounds = robotProxy.getBattleFieldSize();
-		Paintables.addPaintable(this);
-	}
-
-	@Override
-	public String getPainterName() {
-		return null;  // no specific painter for instances of this class
 	}
 
 	@Override

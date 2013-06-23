@@ -5,8 +5,6 @@ import java.io.File;
 
 import robocode.Condition;
 import xander.core.math.RCMath;
-import xander.paint.Paintable;
-import xander.paint.Paintables;
 
 /**
  * Proxy class for the main robot that exposes only the main robot getter methods
@@ -15,13 +13,12 @@ import xander.paint.Paintables;
  * 
  * @author Scott Arnold
  */
-public class RobotProxy implements Paintable {
+public class RobotProxy {
 	
 	AbstractXanderRobot robot;
 	private Double battleFieldDiagonal;
 	
 	public RobotProxy() {
-		Paintables.addPaintable(this);
 	}
 	
 	/**
@@ -201,8 +198,4 @@ public class RobotProxy implements Paintable {
 		robot.removeCustomEvent(condition);
 	}
 	
-	@Override
-	public String getPainterName() {
-		return null;  // no specific Painter
-	}	
 }

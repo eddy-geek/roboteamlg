@@ -13,7 +13,6 @@ import xander.core.log.Logger;
 import xander.core.math.RCPhysics;
 import xander.core.track.Snapshot;
 import xander.core.track.SnapshotHistory;
-import xander.paint.Paintable;
 
 /**
  * Detects opponents that attempt to perfectly mirror our driving pattern.
@@ -21,7 +20,7 @@ import xander.paint.Paintable;
  * 
  * @author Scott Arnold
  */
-public class MirrorDetector implements RoundBeginListener, ScannedRobotListener, Paintable {
+public class MirrorDetector implements RoundBeginListener, ScannedRobotListener {
 
 	private static final Log log = Logger.getLog(MirrorDetector.class);
 	private static final double BOX_SIZE = RCPhysics.ROBOT_WIDTH + 10;
@@ -134,8 +133,4 @@ public class MirrorDetector implements RoundBeginListener, ScannedRobotListener,
 		}
 	}
 	
-	@Override
-	public String getPainterName() {
-		return null;
-	}
 }

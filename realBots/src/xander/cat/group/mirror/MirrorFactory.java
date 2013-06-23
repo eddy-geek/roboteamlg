@@ -8,7 +8,6 @@ import xander.core.gun.Gun;
 import xander.core.gun.XanderGun;
 import xander.core.gun.power.FixedPowerSelector;
 import xander.core.gun.power.PowerSelector;
-import xander.paint.Paintables;
 
 public class MirrorFactory {
 
@@ -31,6 +30,5 @@ public class MirrorFactory {
 		AntiMirrorTargeter targeter = new AntiMirrorTargeter(mirrorPlan, mirrorDetector, orbitalDrivePredictor);
 		Gun antiMirrorGun = new XanderGun(targeter, powerSelector);
 		componentChain.addComponents(mirrorScenario, antiMirrorDrive, antiMirrorGun);
-		Paintables.addPaintable(mirrorDetector);
 	}
 }
