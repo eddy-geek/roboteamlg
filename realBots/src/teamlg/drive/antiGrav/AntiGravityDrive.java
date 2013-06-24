@@ -22,15 +22,14 @@ import xander.core.track.SnapshotHistory;
  * The anti-gravity patterns looks at all the enemies and set up the danger they
  * represent.
  * 
- *  TODO: Take walls into account
  *  TODO: Improve the repulsive force so that it takes into account target health
- *  TODO: Remove printLn and perform proper logging.
  *
  * @author Frederic Hemery
  */
 public class AntiGravityDrive implements Drive, PaintListener {
 
     private static final int REPULSE_FACTOR = 100000;
+    private static final int ESCAPE_ANGLE = 15;
     
     private RobotProxy robot;
     private HashMap<String, GravityPoint> aGravMap;
@@ -101,12 +100,35 @@ public class AntiGravityDrive implements Drive, PaintListener {
             // Add the gravity from the walls.
             computeWallThreat();
 
+            // Add the repulse from last position.
             handleOwnRepulse();
             
             //computeConfortMatrix();
             
+            // Tweak the turn angle as to avoid in bearing.
+            double turnAngle = computeTurnAngle(targetX, targetY);
+            boolean recompute = true;
+            while (recompute)
+            {
+                recompute = false;
+                for (String aRobot: aRobotList)
+                {
+                    Snapshot aSnapshot = aHistory.getSnapshot(aRobot);
+                    if (aSnapshot != null) {
+                        double aRobotAngle = computeTurnAngle(aSnapshot.getX(), aSnapshot.getY());
+                        if (Math.abs(turnAngle - aRobotAngle) % 180 <= ESCAPE_ANGLE)
+                        {
+                            turnAngle+=ESCAPE_ANGLE;
+                            recompute = true;
+                            System.out.println("We're in the area of "+aSnapshot.getName()+", let's move out.");
+                            break;
+                        }
+
+                    }
+                }
+            }
             // Finished computing the danger, start computing the Move
-            driveController.drive(computeTurnAngle(), RCPhysics.MAX_SPEED);
+            driveController.drive(turnAngle, RCPhysics.MAX_SPEED);
             
         }
     }
@@ -164,8 +186,8 @@ public class AntiGravityDrive implements Drive, PaintListener {
         double d2 = Math.pow(repulseX - myX, 2) + Math.pow(repulseY - myY,2);        
         if (d2 < 0.1)
             return;
-        targetX += -1* REPULSE_FACTOR * (1/Math.pow(d2, 2))*(repulseX - myX);
-        targetY += -1* REPULSE_FACTOR * (1/Math.pow(d2, 2))*(repulseY - myY);
+        targetX += -1* REPULSE_FACTOR * robot.getOthers() * (1/Math.pow(d2, 2))*(repulseX - myX);
+        targetY += -1* REPULSE_FACTOR * robot.getOthers() * (1/Math.pow(d2, 2))*(repulseY - myY);
         
     }
     
@@ -244,7 +266,7 @@ public class AntiGravityDrive implements Drive, PaintListener {
     	}
     }
 
-    private double computeTurnAngle() {
+    private double computeTurnAngle( double targetX, double targetY) {
         double aRadius = Math.sqrt( Math.pow(myX-targetX, 2) + Math.pow(myY-targetY, 2) );
 
 
