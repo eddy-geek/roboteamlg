@@ -10,6 +10,7 @@ import robocode.ScannedRobotEvent;
 
 import robocode.WinEvent;
 import teamlg.drive.antiGrav.AntiGravityDrive;
+import teamlg.drive.antiGrav.VampAntiGravityDrive;
 import teamlg.radar.SpinningRadar;
 import teamlg.scenario.DuelScenario;
 import teamlg.scenario.StrongerScenario;
@@ -193,7 +194,7 @@ public class Furby extends AbstractXanderRobot {
 		Scenario aStrongerScenario = new StrongerScenario();
         SpinningRadar aStrongerRadar = new SpinningRadar(2*Math.PI);
         XanderGun aStrongerGun = new XanderGun(new LinearTargeter(), mainPowerSelector);
-        AntiGravityDrive aStrongerDrive = new AntiGravityDrive( getBattleFieldWidth(), getBattleFieldHeight() );
+        AntiGravityDrive aStrongerDrive = new VampAntiGravityDrive( getBattleFieldWidth(), getBattleFieldHeight() );
         chain.addComponents(aStrongerScenario, aStrongerRadar, aStrongerGun, aStrongerDrive);
         
         // Robo vamps and not stronger

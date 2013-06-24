@@ -28,24 +28,24 @@ import xander.core.track.SnapshotHistory;
  */
 public class AntiGravityDrive implements Drive, PaintListener {
 
-    private static final int REPULSE_FACTOR = 100000;
-    private static final int ESCAPE_ANGLE = 15;
+    protected static final int REPULSE_FACTOR = 100000;
+    protected static final int ESCAPE_ANGLE = 15;
     
-    private RobotProxy robot;
-    private HashMap<String, GravityPoint> aGravMap;
-    private double mapXLength, mapYLength;
+    protected RobotProxy robot;
+    protected HashMap<String, GravityPoint> aGravMap;
+    protected double mapXLength, mapYLength;
     
-    private double targetX, targetY;
-    private double myX;
-    private double myY;
+    protected double targetX, targetY;
+    protected double myX;
+    protected double myY;
     
-    private double repulseX =-1;
-    private double repulseY =-1;
-    private int turnToRenewRepulse;
-    private static int NB_OF_TURNS_PER_REPULSE = 5;
+    protected double repulseX =-1;
+    protected double repulseY =-1;
+    protected int turnToRenewRepulse;
+    protected static int NB_OF_TURNS_PER_REPULSE = 5;
     
-    private static final int CONFORT_SUBDIVISION = 100;
-    private double[][] confortMatrix;
+    protected static final int CONFORT_SUBDIVISION = 100;
+    protected double[][] confortMatrix;
     
 
     public AntiGravityDrive(double mapXlength, double mapYLength) {
@@ -82,7 +82,7 @@ public class AntiGravityDrive implements Drive, PaintListener {
             Snapshot aSnapshot = aHistory.getSnapshot(aRobot);
             if (aSnapshot != null) {
                 // Todo : determine Robot dangerousness.
-                GravityPoint aPoint = new GravityPoint(aSnapshot.getX(), aSnapshot.getY(), -1);
+                GravityPoint aPoint = new GravityPoint(aSnapshot.getX(), aSnapshot.getY(), -1, aSnapshot.getName());
                 aGravMap.put(aRobot, aPoint);
             }
         }
@@ -141,7 +141,7 @@ public class AntiGravityDrive implements Drive, PaintListener {
     /**
      * Retrieves the positions and the target position from the proxy.
      */
-    private void InitializePositions() {
+    protected void InitializePositions() {
         myX = robot.getX();
         myY = robot.getY();
         targetX = robot.getX();
@@ -154,16 +154,16 @@ public class AntiGravityDrive implements Drive, PaintListener {
      * Force driving the robot out of the wall is a 1/d^3 one, d being the distance
      * between the robot of the wall.
      */
-    private void computeWallThreat() {
+    protected void computeWallThreat() {
         // compute wall threat. 
-        targetX += REPULSE_FACTOR/6* 1 / Math.pow(myX, 2);
-        targetX -= REPULSE_FACTOR/6 * 1 / Math.pow(mapXLength - myX, 2);
-        targetY += REPULSE_FACTOR/6 * 1 / Math.pow(myY, 2);
-        targetY -= REPULSE_FACTOR/6 * 1 / Math.pow(mapYLength - myY, 2);
+        targetX += REPULSE_FACTOR*6* 1 / Math.pow(myX, 3);
+        targetX -= REPULSE_FACTOR*6 * 1 / Math.pow(mapXLength - myX, 3);
+        targetY += REPULSE_FACTOR*6 * 1 / Math.pow(myY, 3);
+        targetY -= REPULSE_FACTOR*6 * 1 / Math.pow(mapYLength - myY, 3);
 
     }
 
-    private void handleOwnRepulse() {
+    protected void handleOwnRepulse() {
         // First init. Just record the positions, the other robots are going to do the job.
         if (robot.getTime() < 10)
             return;
@@ -191,14 +191,14 @@ public class AntiGravityDrive implements Drive, PaintListener {
         
     }
     
-    private void ComputeRobotThreat(GravityPoint p) {
+    protected void ComputeRobotThreat(GravityPoint p) {
         double d2 = Math.pow(p.x - myX, 2) + Math.pow(p.y - myY, 2);
         targetX += REPULSE_FACTOR * p.power * (1 / Math.pow(d2, 1.5)) * (p.x - myX);
         targetY += REPULSE_FACTOR * p.power * (1 / Math.pow(d2, 1.5)) * (p.y - myY);
 
     }
     
-    private void computeConfortMatrix() {
+    protected void computeConfortMatrix() {
     	// Compute confort of my position
     	double aMyRepulse = 0;
     	{	    	
@@ -266,7 +266,7 @@ public class AntiGravityDrive implements Drive, PaintListener {
     	}
     }
 
-    private double computeTurnAngle( double targetX, double targetY) {
+    protected double computeTurnAngle( double targetX, double targetY) {
         double aRadius = Math.sqrt( Math.pow(myX-targetX, 2) + Math.pow(myY-targetY, 2) );
 
 
