@@ -22,10 +22,11 @@ public class DistancePowerSelector extends SteppedHitRatioPowerSelector {
 		
 		// Get parent firePower
 		double firePower = super.getFirePower(target);		
+		Logger.getLog(getClass()).info("Base power: " + firePower);
 		
 		// Apply distance ratio
 		double d2 = Math.pow(target.getX() - robotProxy.getX(), 2) + Math.pow(target.getY() - robotProxy.getY(), 2);
-		double distanceRate = 90000 / d2;
+		double distanceRate = 100000 / d2;
 		Logger.getLog(getClass()).info("Distance rate [" + target.getName() + "]: " + distanceRate);
 		
 		// Apply opponents ratio

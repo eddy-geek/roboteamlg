@@ -67,7 +67,8 @@ public class Furby extends AbstractXanderRobot {
 		powerSelector = REMFactory.getX5PowerSelector(powerSelector);
 		configuration.setDisabledOpponentPowerSelector(powerSelector);
 		steppedPowerSelector = new DistancePowerSelector(
-				new double[] {0.1, 0.2, 0.4}, new double[] {0.5, 0.99, 1.99, 2.99});
+				new double[]{     0.1,    0.2,    0.4,    0.6,    },
+				new double[]{ 0.5,    1.0,    1.5,    2.0,    2.5 });
 		steppedPowerSelector.setPowerDrop(0.135, 15, 0);
 		mainPowerSelector = REMFactory.getX5PowerSelector(steppedPowerSelector);
 		wins = new boolean[getNumRounds()]; 
@@ -168,11 +169,11 @@ public class Furby extends AbstractXanderRobot {
         // ...
 		
         // Robo vamps and Stronger
-		Scenario aStrongerScenario = new StrongerScenario();
-        SpinningRadar aStrongerRadar = new SpinningRadar(2*Math.PI);
-        XanderGun aStrongerGun = new XanderGun(new LinearTargeter(), mainPowerSelector);
-        AntiGravityDrive aStrongerDrive = new VampAntiGravityDrive( getBattleFieldWidth(), getBattleFieldHeight() );
-        chain.addComponents(aStrongerScenario, aStrongerRadar, aStrongerGun, aStrongerDrive);
+//		Scenario aStrongerScenario = new StrongerScenario();
+//        SpinningRadar aStrongerRadar = new SpinningRadar(2*Math.PI);
+//        XanderGun aStrongerGun = new XanderGun(new LinearTargeter(), mainPowerSelector);
+//        AntiGravityDrive aStrongerDrive = new VampAntiGravityDrive( getBattleFieldWidth(), getBattleFieldHeight() );
+//        chain.addComponents(aStrongerScenario, aStrongerRadar, aStrongerGun, aStrongerDrive);
         
         // Robo vamps and not stronger
         // ...
@@ -184,7 +185,7 @@ public class Furby extends AbstractXanderRobot {
 
         SpinningRadar aDefaultRadar = new SpinningRadar(2*Math.PI);
         XanderGun aDefaultGun = new XanderGun(new LinearTargeter(), mainPowerSelector);
-        AntiGravityDrive aDefaultDrive = new AntiGravityDrive( getBattleFieldWidth(), getBattleFieldHeight() );
+        AntiGravityDrive aDefaultDrive = new VampAntiGravityDrive( getBattleFieldWidth(), getBattleFieldHeight() );
 
         chain.addDefaultComponents( aDefaultRadar,aDefaultGun, aDefaultDrive);
                 
