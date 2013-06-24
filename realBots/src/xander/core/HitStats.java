@@ -32,7 +32,7 @@ public class HitStats implements BulletHitListener, SurvivalListener {
      * Same as below, but between 0.5 (not dangerous) and 3 (very dangerous)
      * Average will be 0.5+2.5/nRobot¹
      */
-    public double getNormalizedHitRatio(String aRobot) {
+    public double getNormalizedHitRatioBy(String aRobot) {
         return 0.5 + getHitRatioBy(aRobot) * 2.5;
     }
 
