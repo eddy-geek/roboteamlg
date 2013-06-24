@@ -22,9 +22,9 @@ public class StrongerScenario implements Scenario {
 				maxEnergy = Math.max(maxEnergy, aSnapshot.getEnergy());
 			}
 		}
-		Logger.getLog(getClass()).debug("Stronger energy: " + maxEnergy);
+		//Logger.getLog(getClass()).info("Stronger energy: " + maxEnergy);
 		boolean bStronger = Resources.getRobotProxy().getEnergy() >= maxEnergy;
-		if (bStronger) Logger.getLog(getClass()).debug("Stronger");
+		//if (bStronger) Logger.getLog(getClass()).info("Stronger");
 		return bStronger;
 	}
 
