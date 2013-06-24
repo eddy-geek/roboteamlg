@@ -10,6 +10,7 @@ import robocode.ScannedRobotEvent;
 
 import robocode.WinEvent;
 import teamlg.drive.antiGrav.AntiGravityDrive;
+import teamlg.gun.DistancePowerSelector;
 import teamlg.radar.SpinningRadar;
 import teamlg.scenario.DuelScenario;
 import teamlg.scenario.StrongerScenario;
@@ -23,7 +24,6 @@ import xander.cat.group.shield.BulletShieldingAutoFireCondition;
 import xander.cat.group.shield.BulletShieldingController;
 import xander.cat.group.shield.BulletShieldingFactory;
 import xander.cat.gun.BSProtectedGun;
-import xander.cat.gun.power.SteppedHitRatioPowerSelector;
 import xander.cat.radar.BasicRadar;
 import xander.cat.scenario.CircularDriveScenario;
 import xander.cat.scenario.NoOpponentWavesScenario;
@@ -55,7 +55,7 @@ import xander.core.track.GunStats;
 public class Furby extends AbstractXanderRobot {
 
 	private static CircularDriveScenario circularDriverScenario;
-	private static SteppedHitRatioPowerSelector steppedPowerSelector;
+	private static DistancePowerSelector steppedPowerSelector;
 	private static PowerSelector mainPowerSelector;
 	private static Path2D.Double driveBounds;
 	private static boolean[] wins;
@@ -82,8 +82,8 @@ public class Furby extends AbstractXanderRobot {
 		PowerSelector powerSelector = configuration.getDisabledOpponentPowerSelector();
 		powerSelector = REMFactory.getX5PowerSelector(powerSelector);
 		configuration.setDisabledOpponentPowerSelector(powerSelector);
-		steppedPowerSelector = new SteppedHitRatioPowerSelector(
-				new double[] {0.17}, new double[] {1.85, 1.99});
+		steppedPowerSelector = new DistancePowerSelector(
+				new double[] {0.1, 0.2, 0.4}, new double[] {0.5, 0.99, 1.99, 2.99});
 		steppedPowerSelector.setPowerDrop(0.135, 15, 0);
 		mainPowerSelector = REMFactory.getX5PowerSelector(steppedPowerSelector);
 		wins = new boolean[getNumRounds()]; 
@@ -180,11 +180,11 @@ public class Furby extends AbstractXanderRobot {
 		//
 		
 		// 1 vs 1
-        Scenario aDuelScenario = new DuelScenario();
-        Radar aDuelRadar = new BasicRadar(90, 45);
-        Gun aDuelGun = new XanderGun(new LinearTargeter(), mainPowerSelector);
-        Drive aDuelDrive = new IdealPositionDrive();
-        chain.addComponents(aDuelScenario, aDuelRadar, aDuelGun, aDuelDrive);
+//        Scenario aDuelScenario = new DuelScenario();
+//        Radar aDuelRadar = new BasicRadar(90, 45);
+//        Gun aDuelGun = new XanderGun(new LinearTargeter(), mainPowerSelector);
+//        Drive aDuelDrive = new IdealPositionDrive();
+//        chain.addComponents(aDuelScenario, aDuelRadar, aDuelGun, aDuelDrive);
         
         // No robo vamps
         // ...
