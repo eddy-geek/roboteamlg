@@ -71,8 +71,6 @@ public class Furby extends AbstractXanderRobot {
 
 	@Override
 	protected void configure(Configuration configuration) {
-		configuration.setAutoFireOnDisabledOpponents(true);  
-		configuration.addAutoFireCondition(new BulletShieldingAutoFireCondition());
 		configuration.setLogComponentRunTimes(true);
 		configuration.setLogDriveTimes(true);
 		configuration.setSnapshotHistorySize(120);
@@ -147,12 +145,6 @@ public class Furby extends AbstractXanderRobot {
 	@Override
 	protected void addComponents(ComponentChain chain) {
 		
-//		FactorArrayPainter wsDriveFAPainter = new FactorArrayPainter("WS Drive FA", "WS Drive", false);
-//		FactorArrayPainter tdDriveFAPainter = new FactorArrayPainter("TD Drive FA", "TD Drive", false);
-//		tdDriveFAPainter.setPegColor(Color.PINK);
-//		XanderPaintManager.getInstance(this).enable(getBattleFieldHeight(), wsDriveFAPainter, tdDriveFAPainter);
-//		PaintSource<Path2D.Double> dbSource = new PaintSource<Path2D.Double>("Drive Bounds", driveBounds);
-//		XanderPaintManager.getInstance(this).enable(getBattleFieldHeight(), new BulletShieldingPainter());
 		
 		// RADAR
 		// DRIVES

@@ -44,8 +44,8 @@ public class VampAntiGravityDrive extends AntiGravityDrive{
             else
             {
                 double d2 = Math.pow(p.x - myX, 2) + Math.pow(p.y - myY, 2);
-                targetX += REPULSE_FACTOR * p.power * -1 * (1 / Math.pow(d2, 1.5)) * (p.x - myX);
-                targetY += REPULSE_FACTOR * p.power * -1 * (1 / Math.pow(d2, 1.5)) * (p.y - myY);
+                targetX += REPULSE_FACTOR * p.power * -1.5 * (1 / Math.pow(d2, 1.5)) * (p.x - myX);
+                targetY += REPULSE_FACTOR * p.power * -1.5 * (1 / Math.pow(d2, 1.5)) * (p.y - myY);
             }
         }
         else
