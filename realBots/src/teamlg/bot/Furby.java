@@ -67,7 +67,8 @@ public class Furby extends AbstractXanderRobot {
 		powerSelector = REMFactory.getX5PowerSelector(powerSelector);
 		configuration.setDisabledOpponentPowerSelector(powerSelector);
 		steppedPowerSelector = new DistancePowerSelector(
-				new double[] {0.1, 0.2, 0.4}, new double[] {0.5, 0.99, 1.99, 2.99});
+				new double[]{     0.1,    0.2,    0.4,    0.6,    },
+				new double[]{ 0.5,    1.0,    1.5,    2.0,    2.5 });
 		steppedPowerSelector.setPowerDrop(0.135, 15, 0);
 		mainPowerSelector = REMFactory.getX5PowerSelector(steppedPowerSelector);
 		wins = new boolean[getNumRounds()]; 
@@ -163,14 +164,6 @@ public class Furby extends AbstractXanderRobot {
 //        Gun aDuelGun = new XanderGun(new LinearTargeter(), mainPowerSelector);
 //        Drive aDuelDrive = new IdealPositionDrive();
 //        chain.addComponents(aDuelScenario, aDuelRadar, aDuelGun, aDuelDrive);
-        
-        // No robo vamps
-        // ...
-		
-     
-        // Robo vamps and not stronger
-        // ...
-        
 		
 		// default components will be 
         // A Anti Gravity Drive
