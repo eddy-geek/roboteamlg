@@ -36,6 +36,7 @@ public class AntiGravityDrive implements Drive, PaintListener {
     protected double mapXLength, mapYLength;
     
     protected double targetX, targetY;
+    protected double decidedX, decidedY;
     protected double myX;
     protected double myY;
     
@@ -117,12 +118,13 @@ public class AntiGravityDrive implements Drive, PaintListener {
             //computeConfortMatrix();
             
             // Tweak the turn angle as to avoid in bearing.
+            decidedX = targetX;
+            decidedY = targetY;
             double turnAngle = computeTurnAngle(targetX, targetY);
             boolean recompute = true;
             int escapeAngle = ESCAPE_ANGLE;
-            if (robot.getOthers() == 1)
-                escapeAngle = 60;
-            System.out.println("Escape angle is: "+escapeAngle);
+            if (robot.getOthers() < 4)
+                escapeAngle = 60 - 15 * robot.getOthers();
             while (recompute)
             {
                 recompute = false;
@@ -135,7 +137,6 @@ public class AntiGravityDrive implements Drive, PaintListener {
                         {
                             turnAngle+=escapeAngle;
                             recompute = true;
-                            System.out.println("We're in the area of "+aSnapshot.getName()+", let's move out.");
                             break;
                         }
 
@@ -172,10 +173,10 @@ public class AntiGravityDrive implements Drive, PaintListener {
     protected void computeWallThreat() {
         // compute wall threat. 
         int others = robot.getOthers();
-        targetX += REPULSE_FACTOR*20 * (10- others)* 1 / Math.pow(myX, 3);
-        targetX -= REPULSE_FACTOR*20 * (10- others) / Math.pow(mapXLength - myX, 3);
-        targetY += REPULSE_FACTOR*20 * (10- others) / Math.pow(myY, 3);
-        targetY -= REPULSE_FACTOR*20 * (10- others) / Math.pow(mapYLength - myY, 3);
+        targetX += REPULSE_FACTOR*20 * (5- others/2) / Math.pow(myX, 3);
+        targetX -= REPULSE_FACTOR*20 * (5- others/2) / Math.pow(mapXLength - myX, 3);
+        targetY += REPULSE_FACTOR*15 * (5- others/2) / Math.pow(myY, 3);
+        targetY -= REPULSE_FACTOR*15 * (5- others/2) / Math.pow(mapYLength - myY, 3);
 
     }
 
@@ -207,8 +208,12 @@ public class AntiGravityDrive implements Drive, PaintListener {
         double d2 = Math.pow(repulseX - myX, 2) + Math.pow(repulseY - myY,2);        
         if (d2 < 0.1)
             return;
-        targetX += -1* REPULSE_FACTOR * robot.getOthers() * (1/Math.pow(d2, 2))*(repulseX - myX);
-        targetY += -1* REPULSE_FACTOR * robot.getOthers() * (1/Math.pow(d2, 2))*(repulseY - myY);
+        
+        int aRepulseFactor = REPULSE_FACTOR * 20;
+        if (robot.getOthers() == 1)
+            aRepulseFactor *= 2;
+        targetX += -1* aRepulseFactor * (1/Math.pow(d2, 2))*(repulseX - myX);
+        targetY += -1* aRepulseFactor * (1/Math.pow(d2, 2))*(repulseY - myY);
         
     }
     
@@ -307,12 +312,15 @@ public class AntiGravityDrive implements Drive, PaintListener {
 
     @Override
 	public void onPaint(Graphics2D g) {
+        double d = Math.sqrt( Math.pow(myX - decidedX, 2) + Math.pow(myY - decidedY, 2));
     	// Set the paint color to a red half transparent color
-        g.setColor(new Color(0xff, 0x00, 0x00, 0x80));
+        g.setColor(Color.GREEN);
+        g.fillOval( (int)myX + (int)(50*(decidedX-myX)/d), (int)myY + (int)(50*(decidedY-myY)/d), 10, 10);
     
         // Draw a line from our robot to the scanned robot
-        g.drawLine((int) targetX, (int) targetY, (int) myX, (int) myY);
-    
+        //g.drawLine((int) targetX, (int) targetY, (int) myX, (int) myY);
+        g.setColor(new Color(0xff, 0x00, 0x00, 0x80));
+        g.drawOval((int)repulseX, (int)repulseY, 10, 10);
 //        // Draw a filled square on top of the scanned robot that covers it
 //        g.fillRect(scannedX - 20, scannedY - 20, 40, 40);
     }
