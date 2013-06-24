@@ -2,10 +2,11 @@
   <artifact name="roboteamlg:jar">
     <output-path>$PROJECT_DIR$/bin/artifacts/roboteamlg_jar</output-path>
     <root id="root">
-      <element id="archive" name="roboteamlg.jar">
+      <element id="archive" name="teamlg.bot.Furby_1.0.jar">
         <element id="directory" name="META-INF">
           <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
         </element>
+        <element id="module-output" name="roboteamlg" />
       </element>
       <element id="library" level="project" name="robocode" />
     </root>

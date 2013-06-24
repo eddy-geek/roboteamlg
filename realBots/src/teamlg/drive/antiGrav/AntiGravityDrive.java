@@ -82,7 +82,8 @@ public class AntiGravityDrive implements Drive, PaintListener {
             Snapshot aSnapshot = aHistory.getSnapshot(aRobot);
             if (aSnapshot != null) {
                 // Todo : determine Robot dangerousness.
-                GravityPoint aPoint = new GravityPoint(aSnapshot.getX(), aSnapshot.getY(), -1, aSnapshot.getName());
+                int threat = Resources.getHitStats().getHitRatioBy(aRobot);
+                GravityPoint aPoint = new GravityPoint(aSnapshot.getX(), aSnapshot.getY(), -threat, aSnapshot.getName());
                 aGravMap.put(aRobot, aPoint);
             }
         }
