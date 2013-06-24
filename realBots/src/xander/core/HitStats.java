@@ -16,6 +16,8 @@ public class HitStats implements BulletHitListener, SurvivalListener {
 
     private static final Log log = Logger.getLog(HitStats.class);
 
+    protected final static double MAX_NORMALIZED = 2.5;
+
     int totalHits = 0;
     int nOthers = 1;
 
@@ -32,8 +34,8 @@ public class HitStats implements BulletHitListener, SurvivalListener {
      * Same as below, but between 0.5 (not dangerous) and 3 (very dangerous)
      * Average will be 0.5+2.5/nRobot¹
      */
-    public double getNormalizedHitRatioBy(String aRobot) {
-        return 0.5 + getHitRatioBy(aRobot) * 2.5;
+    public double getHitRatioBy(String aRobot) {
+        return 0.5 + getNormalizedHitRatioBy(aRobot) * MAX_NORMALIZED;
     }
 
     /**
@@ -43,9 +45,11 @@ public class HitStats implements BulletHitListener, SurvivalListener {
      * @param aRobot
      * @return
      */
-    public double getHitRatioBy(String aRobot) {
+    public double getNormalizedHitRatioBy(String aRobot) {
         Double res = hitRatioBy.get(aRobot);
-        return res == null ? 0 : res;
+        return res == null ?
+                (totalHits < nOthers ? 1/MAX_NORMALIZED : 0) : res;
+        // (Wait for n hits before saying a bit is not dangerous)
     }
 
     @Override

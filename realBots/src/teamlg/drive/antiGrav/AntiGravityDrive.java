@@ -46,7 +46,10 @@ public class AntiGravityDrive implements Drive, PaintListener {
     
     protected static final int CONFORT_SUBDIVISION = 100;
     protected double[][] confortMatrix;
-    
+
+    protected double LOW_ENERGY_THRESHOLD = 30;
+    protected double LOW_ENERGY_BONUS =1.5; // Multiplicative bonus (0 = ignore)
+
 
     public AntiGravityDrive(double mapXlength, double mapYLength) {
         //Initialize robot proxy and gravmap
@@ -81,8 +84,15 @@ public class AntiGravityDrive implements Drive, PaintListener {
         for (String aRobot : aRobotList ) {
             Snapshot aSnapshot = aHistory.getSnapshot(aRobot);
             if (aSnapshot != null) {
-                // Todo : determine Robot dangerousness.
-                double threat = Resources.getHitStats().getNormalizedHitRatioBy(aRobot);
+                // Determine Robot dangerousness.
+                double threat = Resources.getHitStats().getHitRatioBy(aRobot);
+                double healthBonus = Math.max(0, LOW_ENERGY_THRESHOLD - aSnapshot.getEnergy())/ LOW_ENERGY_THRESHOLD; //Max 1, bigger=weaker
+                healthBonus = 1 + (healthBonus * LOW_ENERGY_BONUS);
+                Logger.getLog(AntiGravityDrive.class).info(
+                        String.format("%s gravity = %.2f / %.2f", aSnapshot.getName(), threat, healthBonus)
+                        /*aSnapshot.getName() + " gravity = threat [" +
+                                threat + "]/ health [" + healthBonus + "]"*/);
+                threat /= healthBonus;
                 GravityPoint aPoint = new GravityPoint(aSnapshot.getX(), aSnapshot.getY(), -threat, aSnapshot.getName());
                 aGravMap.put(aRobot, aPoint);
             }
