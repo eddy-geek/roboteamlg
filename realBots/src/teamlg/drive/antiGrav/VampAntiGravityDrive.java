@@ -18,6 +18,7 @@ public class VampAntiGravityDrive extends AntiGravityDrive{
         super(mapXlength,mapYLength);
     }
     
+    @Override
     protected void ComputeRobotThreat(GravityPoint p) {
         if (p.name.contains(ROBOVAMP_STR))
         {
@@ -44,8 +45,11 @@ public class VampAntiGravityDrive extends AntiGravityDrive{
             else
             {
                 double d2 = Math.pow(p.x - myX, 2) + Math.pow(p.y - myY, 2);
-                targetX += REPULSE_FACTOR * p.power * -1.5 * (1 / Math.pow(d2, 1.5)) * (p.x - myX);
-                targetY += REPULSE_FACTOR * p.power * -1.5 * (1 / Math.pow(d2, 1.5)) * (p.y - myY);
+                if (d2 > 2500)
+                {
+                    targetX += REPULSE_FACTOR * p.power * -1 * (1 / Math.pow(d2, 2)) * (p.x - myX);
+                    targetY += REPULSE_FACTOR * p.power * -1 * (1 / Math.pow(d2, 2)) * (p.y - myY);
+                }
             }
         }
         else

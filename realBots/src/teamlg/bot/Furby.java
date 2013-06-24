@@ -167,13 +167,7 @@ public class Furby extends AbstractXanderRobot {
         // No robo vamps
         // ...
 		
-        // Robo vamps and Stronger
-		Scenario aStrongerScenario = new StrongerScenario();
-        SpinningRadar aStrongerRadar = new SpinningRadar(2*Math.PI);
-        XanderGun aStrongerGun = new XanderGun(new LinearTargeter(), mainPowerSelector);
-        AntiGravityDrive aStrongerDrive = new VampAntiGravityDrive( getBattleFieldWidth(), getBattleFieldHeight() );
-        chain.addComponents(aStrongerScenario, aStrongerRadar, aStrongerGun, aStrongerDrive);
-        
+     
         // Robo vamps and not stronger
         // ...
         
@@ -184,7 +178,7 @@ public class Furby extends AbstractXanderRobot {
 
         SpinningRadar aDefaultRadar = new SpinningRadar(2*Math.PI);
         XanderGun aDefaultGun = new XanderGun(new LinearTargeter(), mainPowerSelector);
-        AntiGravityDrive aDefaultDrive = new AntiGravityDrive( getBattleFieldWidth(), getBattleFieldHeight() );
+        AntiGravityDrive aDefaultDrive = new VampAntiGravityDrive( getBattleFieldWidth(), getBattleFieldHeight() );
 
         chain.addDefaultComponents( aDefaultRadar,aDefaultGun, aDefaultDrive);
                 

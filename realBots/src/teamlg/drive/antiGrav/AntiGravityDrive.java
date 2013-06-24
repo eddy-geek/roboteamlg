@@ -109,6 +109,10 @@ public class AntiGravityDrive implements Drive, PaintListener {
             // Tweak the turn angle as to avoid in bearing.
             double turnAngle = computeTurnAngle(targetX, targetY);
             boolean recompute = true;
+            int escapeAngle = ESCAPE_ANGLE;
+            if (robot.getOthers() == 1)
+                escapeAngle = 60;
+            System.out.println("Escape angle is: "+escapeAngle);
             while (recompute)
             {
                 recompute = false;
@@ -117,9 +121,9 @@ public class AntiGravityDrive implements Drive, PaintListener {
                     Snapshot aSnapshot = aHistory.getSnapshot(aRobot);
                     if (aSnapshot != null) {
                         double aRobotAngle = computeTurnAngle(aSnapshot.getX(), aSnapshot.getY());
-                        if (Math.abs(turnAngle - aRobotAngle) % 180 <= ESCAPE_ANGLE)
+                        if (Math.abs(turnAngle - aRobotAngle) % 180 <= escapeAngle)
                         {
-                            turnAngle+=ESCAPE_ANGLE;
+                            turnAngle+=escapeAngle;
                             recompute = true;
                             System.out.println("We're in the area of "+aSnapshot.getName()+", let's move out.");
                             break;
@@ -157,10 +161,11 @@ public class AntiGravityDrive implements Drive, PaintListener {
      */
     protected void computeWallThreat() {
         // compute wall threat. 
-        targetX += REPULSE_FACTOR*20* 1 / Math.pow(myX, 3);
-        targetX -= REPULSE_FACTOR*20 * 1 / Math.pow(mapXLength - myX, 3);
-        targetY += REPULSE_FACTOR*20 * 1 / Math.pow(myY, 3);
-        targetY -= REPULSE_FACTOR*20 * 1 / Math.pow(mapYLength - myY, 3);
+        int others = robot.getOthers();
+        targetX += REPULSE_FACTOR*20 * (10- others)* 1 / Math.pow(myX, 3);
+        targetX -= REPULSE_FACTOR*20 * (10- others) / Math.pow(mapXLength - myX, 3);
+        targetY += REPULSE_FACTOR*20 * (10- others) / Math.pow(myY, 3);
+        targetY -= REPULSE_FACTOR*20 * (10- others) / Math.pow(mapYLength - myY, 3);
 
     }
 
@@ -169,14 +174,19 @@ public class AntiGravityDrive implements Drive, PaintListener {
         if (robot.getTime() < 10)
             return;
         
+        // If repulse is ready for renew, set it to my posX and my PosY
         if (turnToRenewRepulse == 0)
         {
             repulseX = myX;
             repulseY = myY;
             turnToRenewRepulse--;
         }
-        else if (turnToRenewRepulse > 0)
+        // else, if we have currently decided to renew repulse, decrement counter
+        // until we reach 0.
+        else if (turnToRenewRepulse > 0){
             --turnToRenewRepulse;
+            return;
+        }
         
         if (robot.getVelocity() ==0 && turnToRenewRepulse < 0)
         {
