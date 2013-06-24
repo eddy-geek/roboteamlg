@@ -1,13 +1,17 @@
 package teamlg.drive.antiGrav;
 
-import java.util.ArrayList;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import xander.core.Resources;
 
+import xander.core.Resources;
 import xander.core.RobotProxy;
 import xander.core.drive.Drive;
 import xander.core.drive.DriveController;
+import xander.core.event.PaintListener;
+import xander.core.log.Logger;
 import xander.core.math.RCPhysics;
 import xander.core.track.Snapshot;
 import xander.core.track.SnapshotHistory;
@@ -24,7 +28,7 @@ import xander.core.track.SnapshotHistory;
  *
  * @author Frederic Hemery
  */
-public class AntiGravityDrive implements Drive {
+public class AntiGravityDrive implements Drive, PaintListener {
 
     private static final int REPULSE_FACTOR = 100000;
     
@@ -41,6 +45,9 @@ public class AntiGravityDrive implements Drive {
     private int turnToRenewRepulse;
     private static int NB_OF_TURNS_PER_REPULSE = 5;
     
+    private static final int CONFORT_SUBDIVISION = 100;
+    private double[][] confortMatrix;
+    
 
     public AntiGravityDrive(double mapXlength, double mapYLength) {
         //Initialize robot proxy and gravmap
@@ -48,6 +55,12 @@ public class AntiGravityDrive implements Drive {
         aGravMap = new HashMap<>();
         this.mapXLength = mapXlength;
         this.mapYLength = mapYLength;
+        
+        
+        this.confortMatrix = new double[(int) (Resources.getRobotProxy().getBattleFieldHeight() / CONFORT_SUBDIVISION)]
+        		[(int) (Resources.getRobotProxy().getBattleFieldWidth() / CONFORT_SUBDIVISION)];
+        
+        Resources.getRobotEvents().addPainter(this);
     }
 
     @Override
@@ -89,6 +102,9 @@ public class AntiGravityDrive implements Drive {
             computeWallThreat();
 
             handleOwnRepulse();
+            
+            //computeConfortMatrix();
+            
             // Finished computing the danger, start computing the Move
             driveController.drive(computeTurnAngle(), RCPhysics.MAX_SPEED);
             
@@ -159,6 +175,74 @@ public class AntiGravityDrive implements Drive {
         targetY += REPULSE_FACTOR * p.power * (1 / Math.pow(d2, 1.5)) * (p.y - myY);
 
     }
+    
+    private void computeConfortMatrix() {
+    	// Compute confort of my position
+    	double aMyRepulse = 0;
+    	{	    	
+	        // Add all the gravity force from other robots
+	        for (GravityPoint p : aGravMap.values()) {
+	        	double d2 = Math.pow(p.x - myX, 2) + Math.pow(p.y - myY, 2);
+	        	aMyRepulse -= REPULSE_FACTOR * p.power * (1 / Math.pow(d2, 1.5));
+	        }
+	        
+            // Compute wall threats
+//	        aMyRepulse -= REPULSE_FACTOR/12 * 1 / Math.pow(myX, 2);
+//	        aMyRepulse -= REPULSE_FACTOR/12 * 1 / Math.pow(mapXLength - myX, 2);
+//	        aMyRepulse -= REPULSE_FACTOR/12 * 1 / Math.pow(myY, 2);
+//	        aMyRepulse -= REPULSE_FACTOR/12 * 1 / Math.pow(mapYLength - myY, 2);
+	        
+	        aMyRepulse = Math.round(aMyRepulse * 10000);
+    	}
+    	
+    	double aMinRepulse = aMyRepulse;
+    	double aMinRepulseX = 0, aMinRepulseY = 0;
+    	
+    	for (int i = 1; i < confortMatrix.length - 1; i++) {
+			for (int j = 1; j < confortMatrix[i].length - 1; j++) {
+				double aRepulse = 0;
+				double iX = j * CONFORT_SUBDIVISION;
+				double jY = i * CONFORT_SUBDIVISION;
+				
+	            // Add all the gravity force from other robots
+	            for (GravityPoint p : aGravMap.values()) {
+	            	double d2 = Math.pow(p.x - iX, 2) + Math.pow(p.y - jY, 2);
+	            	aRepulse -= REPULSE_FACTOR * p.power * (1 / Math.pow(d2, 1.5));
+	            }
+	            
+	            // Compute wall threats
+//	            aRepulse -= REPULSE_FACTOR/12 * 1 / Math.pow(iX, 2);
+//	            aRepulse -= REPULSE_FACTOR/12 * 1 / Math.pow(mapXLength - iX, 2);
+//	            aRepulse -= REPULSE_FACTOR/12 * 1 / Math.pow(jY, 2);
+//	            aRepulse -= REPULSE_FACTOR/12 * 1 / Math.pow(mapYLength - jY, 2);
+
+	            // Store results
+				confortMatrix[i][j] = Math.round(aRepulse * 10000);
+				if (confortMatrix[i][j] < aMinRepulse) {
+					aMinRepulse = confortMatrix[i][j];
+					aMinRepulseX = iX;
+					aMinRepulseY = jY;
+				}
+			}
+		}
+    	Logger.getLog(getClass()).info("My confort: " + aMyRepulse);
+    	Logger.getLog(getClass()).info("Max confort: " + aMinRepulse);
+    	Logger.getLog(getClass()).info(Arrays.toString(confortMatrix[6]));
+    	Logger.getLog(getClass()).info(Arrays.toString(confortMatrix[5]));
+    	Logger.getLog(getClass()).info(Arrays.toString(confortMatrix[4]));
+    	Logger.getLog(getClass()).info(Arrays.toString(confortMatrix[3]));
+    	Logger.getLog(getClass()).info(Arrays.toString(confortMatrix[2]));
+    	Logger.getLog(getClass()).info(Arrays.toString(confortMatrix[1]));
+    	
+    	double aRepulseGain = aMyRepulse / aMinRepulse;
+    	if (aRepulseGain > 3) {
+    		Logger.getLog(getClass()).info("Going to : (" + aMinRepulseX + ", " + aMinRepulseY + ")");
+    		// Let's add a heavy attraction point in the most confortable area
+            double d2 = Math.pow(aMinRepulseX - myX, 2) + Math.pow(aMinRepulseY - myY, 2);
+            targetX += REPULSE_FACTOR * 3 * aGravMap.size() * (1 / Math.pow(d2, 1.5)) * (aMinRepulseX - myX);
+            targetY += REPULSE_FACTOR * 3 * aGravMap.size() * (1 / Math.pow(d2, 1.5)) * (aMinRepulseY - myY);
+    	}
+    }
 
     private double computeTurnAngle() {
         double aRadius = Math.sqrt( Math.pow(myX-targetX, 2) + Math.pow(myY-targetY, 2) );
@@ -178,5 +262,16 @@ public class AntiGravityDrive implements Drive {
         return Math.toDegrees(angleToTurn);
     }
 
+    @Override
+	public void onPaint(Graphics2D g) {
+    	// Set the paint color to a red half transparent color
+        g.setColor(new Color(0xff, 0x00, 0x00, 0x80));
+    
+        // Draw a line from our robot to the scanned robot
+        g.drawLine((int) targetX, (int) targetY, (int) myX, (int) myY);
+    
+//        // Draw a filled square on top of the scanned robot that covers it
+//        g.fillRect(scannedX - 20, scannedY - 20, 40, 40);
+    }
     
 }
