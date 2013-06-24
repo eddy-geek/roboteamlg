@@ -157,10 +157,10 @@ public class AntiGravityDrive implements Drive, PaintListener {
      */
     protected void computeWallThreat() {
         // compute wall threat. 
-        targetX += REPULSE_FACTOR*6* 1 / Math.pow(myX, 3);
-        targetX -= REPULSE_FACTOR*6 * 1 / Math.pow(mapXLength - myX, 3);
-        targetY += REPULSE_FACTOR*6 * 1 / Math.pow(myY, 3);
-        targetY -= REPULSE_FACTOR*6 * 1 / Math.pow(mapYLength - myY, 3);
+        targetX += REPULSE_FACTOR*20* 1 / Math.pow(myX, 3);
+        targetX -= REPULSE_FACTOR*20 * 1 / Math.pow(mapXLength - myX, 3);
+        targetY += REPULSE_FACTOR*20 * 1 / Math.pow(myY, 3);
+        targetY -= REPULSE_FACTOR*20 * 1 / Math.pow(mapYLength - myY, 3);
 
     }
 
