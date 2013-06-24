@@ -162,10 +162,10 @@ public class AntiGravityDrive implements Drive, PaintListener {
     protected void computeWallThreat() {
         // compute wall threat. 
         int others = robot.getOthers();
-        targetX += REPULSE_FACTOR*20 * (10- others)* 1 / Math.pow(myX, 3);
-        targetX -= REPULSE_FACTOR*20 * (10- others) / Math.pow(mapXLength - myX, 3);
-        targetY += REPULSE_FACTOR*20 * (10- others) / Math.pow(myY, 3);
-        targetY -= REPULSE_FACTOR*20 * (10- others) / Math.pow(mapYLength - myY, 3);
+        targetX += REPULSE_FACTOR*20 * (5- others/2)* 1 / Math.pow(myX, 3);
+        targetX -= REPULSE_FACTOR*20 * (5- others/2) / Math.pow(mapXLength - myX, 3);
+        targetY += REPULSE_FACTOR*20 * (5- others/2) / Math.pow(myY, 3);
+        targetY -= REPULSE_FACTOR*20 * (5- others/2) / Math.pow(mapYLength - myY, 3);
 
     }
 
@@ -197,8 +197,8 @@ public class AntiGravityDrive implements Drive, PaintListener {
         double d2 = Math.pow(repulseX - myX, 2) + Math.pow(repulseY - myY,2);        
         if (d2 < 0.1)
             return;
-        targetX += -1* REPULSE_FACTOR * robot.getOthers() * (1/Math.pow(d2, 2))*(repulseX - myX);
-        targetY += -1* REPULSE_FACTOR * robot.getOthers() * (1/Math.pow(d2, 2))*(repulseY - myY);
+        targetX += -1* REPULSE_FACTOR * 5 * (1/Math.pow(d2, 2))*(repulseX - myX);
+        targetY += -1* REPULSE_FACTOR * 5 * (1/Math.pow(d2, 2))*(repulseY - myY);
         
     }
     
