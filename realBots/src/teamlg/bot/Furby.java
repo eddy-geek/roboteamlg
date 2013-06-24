@@ -5,44 +5,30 @@ import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Map;
 import java.util.Set;
+
 import robocode.RobotDeathEvent;
 import robocode.ScannedRobotEvent;
-
 import robocode.WinEvent;
 import teamlg.drive.antiGrav.AntiGravityDrive;
+import teamlg.drive.antiGrav.VampAntiGravityDrive;
 import teamlg.gun.DistancePowerSelector;
 import teamlg.radar.SpinningRadar;
-import teamlg.scenario.DuelScenario;
 import teamlg.scenario.StrongerScenario;
-import xander.cat.group.idealPosition.IdealPositionDrive;
-import xander.cat.group.mirror.AntiMirrorDrive;
-
-import xander.cat.group.mirror.MirrorFactory;
-import xander.cat.group.ram.RamFactory;
 import xander.cat.group.rem.REMFactory;
-import xander.cat.group.shield.BulletShieldingAutoFireCondition;
 import xander.cat.group.shield.BulletShieldingController;
-import xander.cat.group.shield.BulletShieldingFactory;
-import xander.cat.gun.BSProtectedGun;
-import xander.cat.radar.BasicRadar;
 import xander.cat.scenario.CircularDriveScenario;
-import xander.cat.scenario.NoOpponentWavesScenario;
 import xander.core.AbstractXanderRobot;
 import xander.core.ComponentChain;
 import xander.core.Configuration;
 import xander.core.Resources;
 import xander.core.RobotStyle;
 import xander.core.Scenario;
-import xander.core.drive.Drive;
 import xander.core.drive.DriveBoundsFactory;
-import xander.core.gun.Gun;
 import xander.core.gun.XanderGun;
 import xander.core.gun.power.PowerSelector;
-import xander.core.gun.targeter.CircularTargeter;
 import xander.core.gun.targeter.LinearTargeter;
 import xander.core.io.BattleStats;
 import xander.core.math.RCMath;
-import xander.core.radar.Radar;
 import xander.core.track.DriveStats;
 import xander.core.track.GunStats;
 
@@ -70,8 +56,6 @@ public class Furby extends AbstractXanderRobot {
 
 	@Override
 	protected void configure(Configuration configuration) {
-		configuration.setAutoFireOnDisabledOpponents(true);  
-		configuration.addAutoFireCondition(new BulletShieldingAutoFireCondition());
 		configuration.setLogComponentRunTimes(true);
 		configuration.setLogDriveTimes(true);
 		configuration.setSnapshotHistorySize(120);
@@ -146,12 +130,6 @@ public class Furby extends AbstractXanderRobot {
 	@Override
 	protected void addComponents(ComponentChain chain) {
 		
-//		FactorArrayPainter wsDriveFAPainter = new FactorArrayPainter("WS Drive FA", "WS Drive", false);
-//		FactorArrayPainter tdDriveFAPainter = new FactorArrayPainter("TD Drive FA", "TD Drive", false);
-//		tdDriveFAPainter.setPegColor(Color.PINK);
-//		XanderPaintManager.getInstance(this).enable(getBattleFieldHeight(), wsDriveFAPainter, tdDriveFAPainter);
-//		PaintSource<Path2D.Double> dbSource = new PaintSource<Path2D.Double>("Drive Bounds", driveBounds);
-//		XanderPaintManager.getInstance(this).enable(getBattleFieldHeight(), new BulletShieldingPainter());
 		
 		// RADAR
 		// DRIVES
@@ -193,7 +171,7 @@ public class Furby extends AbstractXanderRobot {
 		Scenario aStrongerScenario = new StrongerScenario();
         SpinningRadar aStrongerRadar = new SpinningRadar(2*Math.PI);
         XanderGun aStrongerGun = new XanderGun(new LinearTargeter(), mainPowerSelector);
-        AntiGravityDrive aStrongerDrive = new AntiGravityDrive( getBattleFieldWidth(), getBattleFieldHeight() );
+        AntiGravityDrive aStrongerDrive = new VampAntiGravityDrive( getBattleFieldWidth(), getBattleFieldHeight() );
         chain.addComponents(aStrongerScenario, aStrongerRadar, aStrongerGun, aStrongerDrive);
         
         // Robo vamps and not stronger

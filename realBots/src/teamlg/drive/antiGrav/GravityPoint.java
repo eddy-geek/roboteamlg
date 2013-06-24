@@ -7,10 +7,12 @@ package teamlg.drive.antiGrav;
 public class GravityPoint {
     
     public double x,y,power;
-    public GravityPoint(double pX,double pY,double pPower) {
+    public String name;
+    public GravityPoint(double pX,double pY,double pPower, String pName) {
         x = pX;
         y = pY;
         power = pPower;
+        name = pName;
     }
     
 }

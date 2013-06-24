@@ -47,6 +47,7 @@ public class Resources {
 	private static RobotEvents robotEvents = new RobotEvents();
 	private static GunStats gunStats;
 	private static DriveStats driveStats;
+	private static HitStats hitStats;
 	private static SnapshotHistory snapshotHistory;
 	private static WaveHistory waveHistory;
 	private static Configuration configuration = new Configuration();
@@ -63,6 +64,7 @@ public class Resources {
 				robotEvents, robotProxy, snapshotHistory, configuration);
 		gunStats = new GunStats(robotProxy, waveHistory, robotEvents, configuration);
 		driveStats = new DriveStats(robotProxy, robotEvents, configuration, chain);
+        hitStats = new HitStats(robotProxy, robotEvents);
                 robotList = new RobotList();
 	}
 	
@@ -131,8 +133,12 @@ public class Resources {
 	public static DriveStats getDriveStats() {
 		return driveStats;
 	}
-	
-	static RadarController getRadarController() {
+
+    public static HitStats getHitStats() {
+        return hitStats;
+    }
+
+    static RadarController getRadarController() {
 		return radarController;
 	}
 	
