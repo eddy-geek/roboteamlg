@@ -1,7 +1,6 @@
 package teamlg.drive.antiGrav;
 
 import java.util.HashSet;
-import sun.nio.cs.HistoricallyNamedCharset;
 import static teamlg.drive.antiGrav.AntiGravityDrive.REPULSE_FACTOR;
 import xander.core.Resources;
 import xander.core.track.Snapshot;
@@ -58,6 +57,6 @@ public class VampAntiGravityDrive extends AntiGravityDrive{
             targetX += REPULSE_FACTOR * p.power * (1 / Math.pow(d2, 1.5)) * (p.x - myX);
             targetY += REPULSE_FACTOR * p.power * (1 / Math.pow(d2, 1.5)) * (p.y - myY);
         }
-
+        
     }
 }

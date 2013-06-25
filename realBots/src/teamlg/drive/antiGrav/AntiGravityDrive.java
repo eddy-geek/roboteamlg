@@ -79,6 +79,7 @@ public class AntiGravityDrive implements Drive, PaintListener {
         SnapshotHistory aHistory = Resources.getSnapshotHistory();
         
         HashSet<String> aRobotList = Resources.getOtherRobots().getRobotList(); 
+        aGravMap.clear();
         for (String aRobot : aRobotList ) {
             Snapshot aSnapshot = aHistory.getSnapshot(aRobot);
             if (aSnapshot != null) {
@@ -110,6 +111,8 @@ public class AntiGravityDrive implements Drive, PaintListener {
             // Tweak the turn angle as to avoid in bearing.
             decidedX = targetX;
             decidedY = targetY;
+            
+            Logger.getLog(getClass()).info("Final decision: " + Math.round(targetX)+" ; "+Math.round(targetY));
             double turnAngle = computeTurnAngle(targetX, targetY);
             boolean recompute = true;
             int escapeAngle = ESCAPE_ANGLE;
@@ -167,7 +170,6 @@ public class AntiGravityDrive implements Drive, PaintListener {
         targetX -= REPULSE_FACTOR*20 * (5- others/2) / Math.pow(mapXLength - myX, 3);
         targetY += REPULSE_FACTOR*15 * (5- others/2) / Math.pow(myY, 3);
         targetY -= REPULSE_FACTOR*15 * (5- others/2) / Math.pow(mapYLength - myY, 3);
-
     }
 
     protected void handleOwnRepulse() {
@@ -204,14 +206,12 @@ public class AntiGravityDrive implements Drive, PaintListener {
             aRepulseFactor *= 2;
         targetX += -1* aRepulseFactor * (1/Math.pow(d2, 2))*(repulseX - myX);
         targetY += -1* aRepulseFactor * (1/Math.pow(d2, 2))*(repulseY - myY);
-        
     }
     
     protected void ComputeRobotThreat(GravityPoint p) {
         double d2 = Math.pow(p.x - myX, 2) + Math.pow(p.y - myY, 2);
         targetX += REPULSE_FACTOR * p.power * (1 / Math.pow(d2, 1.5)) * (p.x - myX);
         targetY += REPULSE_FACTOR * p.power * (1 / Math.pow(d2, 1.5)) * (p.y - myY);
-
     }
     
     protected void computeConfortMatrix() {
