@@ -13,7 +13,7 @@ public class RobotList {
     
     public RobotList ()
     {
-        robotNames = new HashSet<>();
+        robotNames = new HashSet<String>();
     }
     
     public void addRobot(String robot)

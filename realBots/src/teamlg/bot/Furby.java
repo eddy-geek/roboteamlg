@@ -13,9 +13,11 @@ import teamlg.drive.antiGrav.AntiGravityDrive;
 import teamlg.drive.antiGrav.VampAntiGravityDrive;
 import teamlg.gun.DistancePowerSelector;
 import teamlg.radar.SpinningRadar;
+import teamlg.scenario.DuelScenario;
 import teamlg.scenario.StrongerScenario;
 import xander.cat.group.rem.REMFactory;
 import xander.cat.group.shield.BulletShieldingController;
+import xander.cat.radar.BasicRadar;
 import xander.cat.scenario.CircularDriveScenario;
 import xander.core.AbstractXanderRobot;
 import xander.core.ComponentChain;
@@ -29,6 +31,7 @@ import xander.core.gun.power.PowerSelector;
 import xander.core.gun.targeter.LinearTargeter;
 import xander.core.io.BattleStats;
 import xander.core.math.RCMath;
+import xander.core.radar.Radar;
 import xander.core.track.DriveStats;
 import xander.core.track.GunStats;
 
@@ -159,11 +162,9 @@ public class Furby extends AbstractXanderRobot {
 		//
 		
 		// 1 vs 1
-//        Scenario aDuelScenario = new DuelScenario();
-//        Radar aDuelRadar = new BasicRadar(90, 45);
-//        Gun aDuelGun = new XanderGun(new LinearTargeter(), mainPowerSelector);
-//        Drive aDuelDrive = new IdealPositionDrive();
-//        chain.addComponents(aDuelScenario, aDuelRadar, aDuelGun, aDuelDrive);
+        /*Scenario aDuelScenario = new DuelScenario();
+        Radar aDuelRadar = new BasicRadar(90, 10);
+        chain.addComponents(aDuelScenario, aDuelRadar);*/
 		
 		// default components will be 
         // A Anti Gravity Drive

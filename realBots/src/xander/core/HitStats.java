@@ -21,8 +21,8 @@ public class HitStats implements BulletHitListener, SurvivalListener {
     int totalHits = 0;
     int nOthers = 1;
 
-    Map<String, Integer> hitBy = new HashMap<>();
-    Map<String, Double> hitRatioBy = new HashMap<>();
+    Map<String, Integer> hitBy = new HashMap<String, Integer>();
+    Map<String, Double> hitRatioBy = new HashMap<String, Double>();
 
     public HitStats(RobotProxy robotProxy, RobotEvents robotEvents) {
         log.info("Initialize HitStats !");

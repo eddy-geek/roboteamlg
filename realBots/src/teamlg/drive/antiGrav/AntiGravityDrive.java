@@ -55,7 +55,7 @@ public class AntiGravityDrive implements Drive, PaintListener {
     public AntiGravityDrive(double mapXlength, double mapYLength) {
         //Initialize robot proxy and gravmap
         robot = Resources.getRobotProxy();
-        aGravMap = new HashMap<>();
+        aGravMap = new HashMap<String, GravityPoint>();
         this.mapXLength = mapXlength;
         this.mapYLength = mapYLength;
         
